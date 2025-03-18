@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Company.Project.DataLayer.Data.Contexts
 {
-    internal class CompanyDbContext: DbContext 
+    public class CompanyDbContext: DbContext 
     {
 
         public CompanyDbContext():base()
