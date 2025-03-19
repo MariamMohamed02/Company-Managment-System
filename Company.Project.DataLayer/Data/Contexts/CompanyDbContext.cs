@@ -12,7 +12,7 @@ namespace Company.Project.DataLayer.Data.Contexts
     public class CompanyDbContext: DbContext 
     {
 
-        public CompanyDbContext():base()
+        public CompanyDbContext(DbContextOptions<CompanyDbContext> options):base(options)
         {
 
         }
@@ -21,10 +21,10 @@ namespace Company.Project.DataLayer.Data.Contexts
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             base.OnModelCreating(modelBuilder);
         }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("Server=.; Database=CompanyManagment; Trusted_Connection=True; TrustServerCertificate=True");
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlServer("Server=.; Database=CompanyManagment; Trusted_Connection=True; TrustServerCertificate=True");
+        //}
 
         public DbSet<Department> Departments { get; set; }
 
