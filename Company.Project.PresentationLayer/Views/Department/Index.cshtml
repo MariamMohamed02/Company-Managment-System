@@ -35,17 +35,9 @@
                     <td>@item.Code</td>
                     <td>@item.Name</td>
                     <td>@item.CreatedAt</td>
-                    
-                    <td>
-                        @* you must send the id of the current department to send it when submitting  *@
-                        <a class="btn btn-warning" asp-route-id="@item.Id" asp-action="Details">Details</a>
-                    </td>
-                    <td>
-                        <a class="btn btn-success" asp-route-id="@item.Id" asp-action="Edit">Update</a>
-                    </td>
-                    <td>
-                        <a class="btn btn-danger" asp-route-id="@item.Id" asp-action="Delete">Delete</a>
-                    </td>
+
+                    <partial name="ButtonsPartialView" model="@item.Id" />
+
                 </tr>
             }
         </tbody>
