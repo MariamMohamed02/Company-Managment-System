@@ -14,6 +14,8 @@ namespace Company.Project.PresentationLayer
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddScoped<IDepartmentRepository,DepartmentRepository>(); // allow dependency injection for the department repository
+            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>(); // allow dependency injection for the employee repository
+
             builder.Services.AddDbContext<CompanyDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
