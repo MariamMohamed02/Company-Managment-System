@@ -17,7 +17,8 @@ namespace Company.Project.DataLayer.Models
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime HiringDate { get; set; }
-       
+        public DateTime CreateAt { get; set; }
+
 
 
 
