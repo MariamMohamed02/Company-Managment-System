@@ -1,6 +1,7 @@
 using Company.Project.BusinessLayer.Interfaces;
 using Company.Project.BusinessLayer.Repositories;
 using Company.Project.DataLayer.Data.Contexts;
+using Company.Project.PresentationLayer.Mapping;
 using Microsoft.EntityFrameworkCore;
 
 namespace Company.Project.PresentationLayer
@@ -20,6 +21,7 @@ namespace Company.Project.PresentationLayer
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             }); // allow di for dbcontext
+            builder.Services.AddAutoMapper(m => m.AddProfile(new EmployeeProfile()));
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

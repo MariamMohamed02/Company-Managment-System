@@ -1,4 +1,5 @@
-﻿using Company.Project.BusinessLayer.Interfaces;
+﻿using AutoMapper;
+using Company.Project.BusinessLayer.Interfaces;
 using Company.Project.DataLayer.Models;
 using Company.Project.PresentationLayer.DTOs;
 using Microsoft.AspNetCore.Mvc;
@@ -9,11 +10,13 @@ namespace Company.Project.PresentationLayer.Controllers
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IDepartmentRepository _departmentRepository;
+        private readonly IMapper _mapper;
 
-        public EmployeeController(IEmployeeRepository employeeRepository, IDepartmentRepository departmentRepository)
+        public EmployeeController(IEmployeeRepository employeeRepository, IDepartmentRepository departmentRepository,AutoMapper.IMapper mapper)
         {
             _employeeRepository = employeeRepository;
             _departmentRepository = departmentRepository;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -48,20 +51,21 @@ namespace Company.Project.PresentationLayer.Controllers
             if (ModelState.IsValid)
             {
                 // store data in the databse
-                var employee = new Employee()
-                {
-                    Name = model.Name,
-                    Address = model.Address,
-                    Age = model.Age,
-                    CreateAt = model.CreateAt,
-                    HiringDate = model.HiringDate,
-                    Email = model.Email,
-                    IsActive = model.IsActive,
-                    IsDeleted = model.IsDeleted,
-                    Phone = model.Phone,
-                    Salary = model.Salary,
-                    DepartmentId=model.DepartmentId
-                };
+                //var employee = new Employee()
+                //{
+                //    Name = model.Name,
+                //    Address = model.Address,
+                //    Age = model.Age,
+                //    CreateAt = model.CreateAt,
+                //    HiringDate = model.HiringDate,
+                //    Email = model.Email,
+                //    IsActive = model.IsActive,
+                //    IsDeleted = model.IsDeleted,
+                //    Phone = model.Phone,
+                //    Salary = model.Salary,
+                //    DepartmentId=model.DepartmentId
+                //};
+                var employee= _mapper.Map<Employee>(model);
                 if (_employeeRepository.Add(employee) > 0)
                 {
                     return RedirectToAction(nameof(Index));
