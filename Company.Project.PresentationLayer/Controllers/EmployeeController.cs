@@ -17,9 +17,19 @@ namespace Company.Project.PresentationLayer.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(string? SearchInput)
         {
-            var employees = _employeeRepository.GetAll();
+            IEnumerable<Employee> employees;
+            if (string.IsNullOrEmpty(SearchInput))
+            {
+                employees= _employeeRepository.GetAll();
+            }
+            else
+            {
+                employees = _employeeRepository.GetByName(SearchInput);
+
+            }
+            
             return View(employees);
         }
 
