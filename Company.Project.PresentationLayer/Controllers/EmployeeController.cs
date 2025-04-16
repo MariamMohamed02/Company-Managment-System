@@ -8,9 +8,12 @@ namespace Company.Project.PresentationLayer.Controllers
     public class EmployeeController : Controller
     {
         private readonly IEmployeeRepository _employeeRepository;
-        public EmployeeController(IEmployeeRepository departmentRepository)
+        private readonly IDepartmentRepository _departmentRepository;
+
+        public EmployeeController(IEmployeeRepository employeeRepository, IDepartmentRepository departmentRepository)
         {
-            _employeeRepository = departmentRepository;
+            _employeeRepository = employeeRepository;
+            _departmentRepository = departmentRepository;
         }
 
         [HttpGet]
@@ -23,6 +26,9 @@ namespace Company.Project.PresentationLayer.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+
+            var department = _departmentRepository.GetAll();
+            ViewData["departments"]=department; // since u cant have 2 datatypes in the employe view @model therefore send this info in the dictionary
             return View();
         }
 
@@ -43,7 +49,8 @@ namespace Company.Project.PresentationLayer.Controllers
                     IsActive = model.IsActive,
                     IsDeleted = model.IsDeleted,
                     Phone = model.Phone,
-                    Salary = model.Salary
+                    Salary = model.Salary,
+                    DepartmentId=model.DepartmentId
                 };
                 if (_employeeRepository.Add(employee) > 0)
                 {
@@ -67,6 +74,10 @@ namespace Company.Project.PresentationLayer.Controllers
         [HttpGet]
         public IActionResult Edit(int? id) // Action to go to the view of the Update 
         {
+
+            var department = _departmentRepository.GetAll();
+            ViewData["departments"] = department; // since u cant have 2 datatypes in the employe view @model therefore send th
+
             // Return the Deatails Action (not the View Action)
             return Details(id, "Edit");
         }
@@ -97,6 +108,8 @@ namespace Company.Project.PresentationLayer.Controllers
         [HttpGet]
         public IActionResult Delete(int? id)  // Redirect to the Delete Page
         {
+            var department = _departmentRepository.GetAll();
+            ViewData["departments"] = department; // since u cant have 2 datatypes in the employe view @model therefore send th
             return Details(id, "Delete");
         }
 
@@ -110,7 +123,7 @@ namespace Company.Project.PresentationLayer.Controllers
             if (ModelState.IsValid)
             {
 
-                // if (id != department.Id) return BadRequest(); 
+                //  if (id != department.Id) return BadRequest(); 
                 if (id == employee.Id)
                 {
                     var count = _employeeRepository.Delete(employee);
@@ -120,9 +133,12 @@ namespace Company.Project.PresentationLayer.Controllers
                     }
                 }
 
+
             }
             return View(employee);
         }
+
+
 
 
     }
