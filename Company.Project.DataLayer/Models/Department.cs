@@ -11,7 +11,7 @@ namespace Company.Project.DataLayer.Models
         
         public string Code { get; set; }
         public DateTime CreatedAt { get; set; }
-        public List<Employee> Employees { get; set; }
+        public List<Employee>? Employees { get; set; }
 
 
     }
