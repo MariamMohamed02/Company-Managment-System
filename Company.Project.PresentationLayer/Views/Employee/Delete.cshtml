@@ -11,18 +11,18 @@
 
     <partial name="EmployeePartialView/_DetailsDelete"/>
 
-    <div class="my-3">
-        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-warning">Delete</a>
-        @* <input type="submit" value="Delete" class="btn btn-primary" /> *@
-        <a asp-action="Index" class="btn btn-light">Back To List</a>
-    </div>
+    @* <div class="my-3"> *@
+    @*     <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-warning">Delete</a> *@
+    @*     @* <input type="submit" value="Delete" class="btn btn-primary" /> *@ 
+    @*     <a asp-action="Index" class="btn btn-light">Back To List</a> *@
+    @* </div> *@
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+</form>
 
 
-
-@* <div class="my-3"> *@
-@*     <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a> *@
-@*     <a asp-action="Index" class="btn btn-light">Back To List</a> *@
-@* </div> *@
 
 
 

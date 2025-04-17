@@ -10,6 +10,8 @@ namespace Company.Project.PresentationLayer.Mapping
         {
             // map from createemployeedto TO employee and no the opposite
             CreateMap<CreateEmployeeDto, Employee>();
+            CreateMap<Employee, CreateEmployeeDto>();
+                //.ForMember(d=>d.DepartmentName, o=>o.MapFrom(s=>s.Department.Name));
 
 
         }

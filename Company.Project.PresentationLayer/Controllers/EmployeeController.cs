@@ -8,15 +8,21 @@ namespace Company.Project.PresentationLayer.Controllers
 {
     public class EmployeeController : Controller
     {
-        private readonly IEmployeeRepository _employeeRepository;
-        private readonly IDepartmentRepository _departmentRepository;
+          private readonly IUnitOfWork _unitOfWork;
+    //    private readonly IEmployeeRepository _employeeRepository;
+    //    private readonly IDepartmentRepository _departmentRepository;
         private readonly IMapper _mapper;
 
-        public EmployeeController(IEmployeeRepository employeeRepository, IDepartmentRepository departmentRepository,AutoMapper.IMapper mapper)
+        public EmployeeController(
+            //IEmployeeRepository employeeRepository, 
+            //IDepartmentRepository departmentRepository,
+            IUnitOfWork unitOfWork,
+            AutoMapper.IMapper mapper)
         {
-            _employeeRepository = employeeRepository;
-            _departmentRepository = departmentRepository;
+            //_employeeRepository = employeeRepository;
+            //_departmentRepository = departmentRepository;
             _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet]
@@ -25,11 +31,11 @@ namespace Company.Project.PresentationLayer.Controllers
             IEnumerable<Employee> employees;
             if (string.IsNullOrEmpty(SearchInput))
             {
-                employees= _employeeRepository.GetAll();
+                employees= _unitOfWork.EmployeeRepository.GetAll();
             }
             else
             {
-                employees = _employeeRepository.GetByName(SearchInput);
+                employees = _unitOfWork.EmployeeRepository.GetByName(SearchInput);
 
             }
             
@@ -40,7 +46,7 @@ namespace Company.Project.PresentationLayer.Controllers
         public IActionResult Create()
         {
 
-            var department = _departmentRepository.GetAll();
+            var department = _unitOfWork.DepartmentRepository.GetAll();
             ViewData["departments"]=department; // since u cant have 2 datatypes in the employe view @model therefore send this info in the dictionary
             return View();
         }
@@ -66,7 +72,7 @@ namespace Company.Project.PresentationLayer.Controllers
                 //    DepartmentId=model.DepartmentId
                 //};
                 var employee= _mapper.Map<Employee>(model);
-                if (_employeeRepository.Add(employee) > 0)
+                if (_unitOfWork.EmployeeRepository.Add(employee) > 0)
                 {
                     return RedirectToAction(nameof(Index));
                 }
@@ -80,8 +86,10 @@ namespace Company.Project.PresentationLayer.Controllers
         public IActionResult Details(int? id, string viewName = "Details")
         {
             if (id is null) return BadRequest("Invalid ID");
-            var employee = _employeeRepository.Get(id.Value);
+            var employee = _unitOfWork.EmployeeRepository.Get(id.Value);
             if (employee is null) return NotFound(new { statusCode = 404, message = $"Employee with Id : {id} is not found" });
+           
+            
             return View(viewName, employee);
         }
 
@@ -89,8 +97,9 @@ namespace Company.Project.PresentationLayer.Controllers
         public IActionResult Edit(int? id) // Action to go to the view of the Update 
         {
 
-            var department = _departmentRepository.GetAll();
+            var department = _unitOfWork.DepartmentRepository.GetAll();
             ViewData["departments"] = department; // since u cant have 2 datatypes in the employe view @model therefore send th
+
 
             // Return the Deatails Action (not the View Action)
             return Details(id, "Edit");
@@ -107,7 +116,7 @@ namespace Company.Project.PresentationLayer.Controllers
                 // if (id != department.Id) return BadRequest(); 
                 if (id == employee.Id)
                 {
-                    var count = _employeeRepository.Update(employee);
+                    var count = _unitOfWork.EmployeeRepository.Update(employee);
                     if (count > 0)
                     {
                         return RedirectToAction(nameof(Index));
@@ -119,38 +128,38 @@ namespace Company.Project.PresentationLayer.Controllers
         }
 
 
+       
         [HttpGet]
-        public IActionResult Delete(int? id)  // Redirect to the Delete Page
+        public IActionResult Delete(int? id)
         {
-            var department = _departmentRepository.GetAll();
-            ViewData["departments"] = department; // since u cant have 2 datatypes in the employe view @model therefore send th
-            return Details(id, "Delete");
-        }
+            if (id == null) return BadRequest();
 
+            var employee = _unitOfWork.EmployeeRepository.Get(id.Value);
+            if (employee == null) return NotFound();
 
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Delete([FromRoute] int id, Employee employee) // Action to actually delete
-        {
-
-            if (ModelState.IsValid)
-            {
-
-                //  if (id != department.Id) return BadRequest(); 
-                if (id == employee.Id)
-                {
-                    var count = _employeeRepository.Delete(employee);
-                    if (count > 0)
-                    {
-                        return RedirectToAction(nameof(Index));
-                    }
-                }
-
-
-            }
+            ViewData["departments"] = _unitOfWork.DepartmentRepository.GetAll();
             return View(employee);
         }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            var employee = _unitOfWork.EmployeeRepository.Get(id);
+
+            if (employee == null)
+                return NotFound();
+
+            var count = _unitOfWork.EmployeeRepository.Delete(employee);
+            if (count > 0)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Optional: show error if deletion failed
+            return View(employee);
+        }
+
 
 
 
