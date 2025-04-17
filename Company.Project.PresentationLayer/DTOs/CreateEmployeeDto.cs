@@ -1,6 +1,7 @@
 ﻿//using Microsoft.Build.Framework;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Company.Project.DataLayer.Models;
 
 namespace Company.Project.PresentationLayer.DTOs
 {
@@ -36,5 +37,11 @@ namespace Company.Project.PresentationLayer.DTOs
 
         [DisplayName("Date of Creation")]
         public DateTime CreateAt { get; set; }
+        public int? DepartmentId { get; set; }
+        
+        
+
+
+
     }
 }

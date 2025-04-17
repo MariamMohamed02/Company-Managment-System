@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Company.Project.DataLayer.Models;
 
 namespace Company.Project.BusinessLayer.Interfaces
 {
-    public interface IEmployeeRepository: IGenericRepository<Employee>
+    public interface IUnitOfWork
     {
-        List<Employee> GetByName(string name);
+        public IDepartmentRepository DepartmentRepository { get; }
+        public IEmployeeRepository EmployeeRepository { get; }
+        
     }
 }

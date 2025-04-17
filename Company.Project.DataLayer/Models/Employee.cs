@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Company.Project.DataLayer.Models
 {
@@ -18,6 +20,11 @@ namespace Company.Project.DataLayer.Models
         public bool IsDeleted { get; set; }
         public DateTime HiringDate { get; set; }
         public DateTime CreateAt { get; set; }
+
+        //ForeignKey 
+        [DisplayName("Department")]
+        public int? DepartmentId { get; set; }
+        public Department? Department { get; set; }
 
 
 

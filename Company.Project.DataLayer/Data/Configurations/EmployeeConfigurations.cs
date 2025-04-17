@@ -15,6 +15,12 @@ namespace Company.Project.DataLayer.Data.Configurations
         {
             builder.Property(e => e.Salary)
                    .HasColumnType("decimal(18,2)");
+
+            builder.HasOne(E=>E.Department)
+                .WithMany(d => d.Employees)
+                .HasForeignKey(e => e.DepartmentId)
+                .OnDelete(DeleteBehavior.SetNull);  // if a department deleted, dont delete the employee, keep this value as null
         }
+       
     }
 }

@@ -1,6 +1,8 @@
+using Company.Project.BusinessLayer;
 using Company.Project.BusinessLayer.Interfaces;
 using Company.Project.BusinessLayer.Repositories;
 using Company.Project.DataLayer.Data.Contexts;
+using Company.Project.PresentationLayer.Mapping;
 using Microsoft.EntityFrameworkCore;
 
 namespace Company.Project.PresentationLayer
@@ -15,11 +17,12 @@ namespace Company.Project.PresentationLayer
             builder.Services.AddControllersWithViews();
             builder.Services.AddScoped<IDepartmentRepository,DepartmentRepository>(); // allow dependency injection for the department repository
             builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>(); // allow dependency injection for the employee repository
-
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddDbContext<CompanyDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             }); // allow di for dbcontext
+            builder.Services.AddAutoMapper(m => m.AddProfile(new EmployeeProfile()));
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
