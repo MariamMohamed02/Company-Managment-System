@@ -2,6 +2,7 @@
 using Company.Project.BusinessLayer.Interfaces;
 using Company.Project.DataLayer.Models;
 using Company.Project.PresentationLayer.DTOs;
+using Company.Project.PresentationLayer.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Company.Project.PresentationLayer.Controllers
@@ -56,21 +57,12 @@ namespace Company.Project.PresentationLayer.Controllers
         {
             if (ModelState.IsValid)
             {
-                // store data in the databse
-                //var employee = new Employee()
-                //{
-                //    Name = model.Name,
-                //    Address = model.Address,
-                //    Age = model.Age,
-                //    CreateAt = model.CreateAt,
-                //    HiringDate = model.HiringDate,
-                //    Email = model.Email,
-                //    IsActive = model.IsActive,
-                //    IsDeleted = model.IsDeleted,
-                //    Phone = model.Phone,
-                //    Salary = model.Salary,
-                //    DepartmentId=model.DepartmentId
-                //};
+                if (model.Image is not null)
+                {
+                   model.ImageName= DocumentSettings.UploadFile(model.Image, "images");
+                }
+
+                
                 var employee= _mapper.Map<Employee>(model);
                 if (_unitOfWork.EmployeeRepository.Add(employee) > 0)
                 {
@@ -128,7 +120,11 @@ namespace Company.Project.PresentationLayer.Controllers
         }
 
 
-       
+
+
+
+
+
         [HttpGet]
         public IActionResult Delete(int? id)
         {
