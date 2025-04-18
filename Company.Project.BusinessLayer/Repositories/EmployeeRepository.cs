@@ -20,12 +20,12 @@ namespace Company.Project.BusinessLayer.Repositories
             _context = context;
         }
 
-        public List<Employee> GetByName(string name)
+        public async Task<List<Employee>> GetByName(string name)
         {
-            return _context.Employees
+            return await _context.Employees
                 .Include(e => e.Department)
                 .Where(e => e.Name.ToLower().Contains(name.ToLower()))
-                .ToList();
+                .ToListAsync();
         }
 
     }

@@ -9,9 +9,9 @@ namespace Company.Project.BusinessLayer.Interfaces
 {
     public interface IGenericRepository<T> where T : BaseEntity
     {
-        IEnumerable<T> GetAll();
-        T? Get(int id);
-        int Add(T model);
+        Task<IEnumerable<T>> GetAll();
+        Task<T?> Get(int id);
+        Task<int> Add(T model);
         int Update(T model);
 
         int Delete(T model);
