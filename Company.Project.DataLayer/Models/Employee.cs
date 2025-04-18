@@ -26,6 +26,8 @@ namespace Company.Project.DataLayer.Models
         public int? DepartmentId { get; set; }
         public Department? Department { get; set; }
 
+        public string? ImageName { get; set; }
+        
 
 
 

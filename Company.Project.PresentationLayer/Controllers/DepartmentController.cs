@@ -20,9 +20,9 @@ namespace Company.Project.PresentationLayer.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var departments = _unitOfWork.DepartmentRepository.GetAll();
+            var departments =await  _unitOfWork.DepartmentRepository.GetAll();
             return View(departments);
         }
 
@@ -32,7 +32,7 @@ namespace Company.Project.PresentationLayer.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(CreateDepartmenDto model)
+        public async Task<IActionResult> Create(CreateDepartmenDto model)
         {
             if (ModelState.IsValid) {
                 // store data in the databse
@@ -43,7 +43,7 @@ namespace Company.Project.PresentationLayer.Controllers
                     CreatedAt = model.CreatedAt,
 
                 };
-                if (_unitOfWork.DepartmentRepository.Add(department) >0)
+                if (await _unitOfWork.DepartmentRepository.Add(department) >0)
                 {
                     return RedirectToAction(nameof(Index));
                 }
@@ -54,18 +54,18 @@ namespace Company.Project.PresentationLayer.Controllers
 
 
         [HttpGet]
-        public IActionResult Details(int? id, string viewName="Details") {
+        public async Task<IActionResult> Details(int? id, string viewName="Details") {
             if (id is null) return BadRequest("Invalid ID");
-            var department = _unitOfWork.DepartmentRepository.Get(id.Value);
+            var department = await _unitOfWork.DepartmentRepository.Get(id.Value);
             if (department is null) return NotFound(new {statusCode=404 , message=$"Department with Id : {id} is not found"});
             return View(viewName, department);
         }
 
         [HttpGet]
-        public IActionResult Edit(int? id) // Action to go to the view of the Update 
+        public async Task<IActionResult> Edit(int? id) // Action to go to the view of the Update 
         {
             // Return the Deatails Action (not the View Action)
-            return Details(id,"Edit");
+            return await Details(id,"Edit");
         }
 
         [HttpPost]
@@ -91,9 +91,9 @@ namespace Company.Project.PresentationLayer.Controllers
 
 
         [HttpGet]
-        public IActionResult Delete(int? id)  // Redirect to the Delete Page
+        public async Task<IActionResult> Delete(int? id)  // Redirect to the Delete Page
         {
-            return Details(id, "Delete");
+            return await Details(id, "Delete");
         }
 
 

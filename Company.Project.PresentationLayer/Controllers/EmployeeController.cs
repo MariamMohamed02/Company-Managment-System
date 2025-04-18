@@ -2,6 +2,7 @@
 using Company.Project.BusinessLayer.Interfaces;
 using Company.Project.DataLayer.Models;
 using Company.Project.PresentationLayer.DTOs;
+using Company.Project.PresentationLayer.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Company.Project.PresentationLayer.Controllers
@@ -26,16 +27,16 @@ namespace Company.Project.PresentationLayer.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index(string? SearchInput)
+        public async Task<IActionResult> Index(string? SearchInput)
         {
             IEnumerable<Employee> employees;
             if (string.IsNullOrEmpty(SearchInput))
             {
-                employees= _unitOfWork.EmployeeRepository.GetAll();
+                employees= await _unitOfWork.EmployeeRepository.GetAll();
             }
             else
             {
-                employees = _unitOfWork.EmployeeRepository.GetByName(SearchInput);
+                employees = await _unitOfWork.EmployeeRepository.GetByName(SearchInput);
 
             }
             
@@ -43,36 +44,27 @@ namespace Company.Project.PresentationLayer.Controllers
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task< IActionResult> Create()
         {
 
-            var department = _unitOfWork.DepartmentRepository.GetAll();
+            var department = await _unitOfWork.DepartmentRepository.GetAll();
             ViewData["departments"]=department; // since u cant have 2 datatypes in the employe view @model therefore send this info in the dictionary
             return View();
         }
 
         [HttpPost]
-        public IActionResult Create(CreateEmployeeDto model)
+        public async Task<IActionResult> Create(CreateEmployeeDto model)
         {
             if (ModelState.IsValid)
             {
-                // store data in the databse
-                //var employee = new Employee()
-                //{
-                //    Name = model.Name,
-                //    Address = model.Address,
-                //    Age = model.Age,
-                //    CreateAt = model.CreateAt,
-                //    HiringDate = model.HiringDate,
-                //    Email = model.Email,
-                //    IsActive = model.IsActive,
-                //    IsDeleted = model.IsDeleted,
-                //    Phone = model.Phone,
-                //    Salary = model.Salary,
-                //    DepartmentId=model.DepartmentId
-                //};
+                if (model.Image is not null)
+                {
+                   model.ImageName= DocumentSettings.UploadFile(model.Image, "images");
+                }
+
+                
                 var employee= _mapper.Map<Employee>(model);
-                if (_unitOfWork.EmployeeRepository.Add(employee) > 0)
+                if (await _unitOfWork.EmployeeRepository.Add(employee) > 0)
                 {
                     return RedirectToAction(nameof(Index));
                 }
@@ -83,10 +75,10 @@ namespace Company.Project.PresentationLayer.Controllers
 
 
         [HttpGet]
-        public IActionResult Details(int? id, string viewName = "Details")
+        public async Task<IActionResult> Details(int? id, string viewName = "Details")
         {
             if (id is null) return BadRequest("Invalid ID");
-            var employee = _unitOfWork.EmployeeRepository.Get(id.Value);
+            var employee =await _unitOfWork.EmployeeRepository.Get(id.Value);
             if (employee is null) return NotFound(new { statusCode = 404, message = $"Employee with Id : {id} is not found" });
            
             
@@ -94,15 +86,15 @@ namespace Company.Project.PresentationLayer.Controllers
         }
 
         [HttpGet]
-        public IActionResult Edit(int? id) // Action to go to the view of the Update 
+        public async Task<IActionResult> Edit(int? id)// Action to go to the view of the Update 
         {
 
-            var department = _unitOfWork.DepartmentRepository.GetAll();
+            var department =await _unitOfWork.DepartmentRepository.GetAll();
             ViewData["departments"] = department; // since u cant have 2 datatypes in the employe view @model therefore send th
 
 
             // Return the Deatails Action (not the View Action)
-            return Details(id, "Edit");
+            return await Details(id, "Edit");
         }
 
         [HttpPost]
@@ -128,24 +120,28 @@ namespace Company.Project.PresentationLayer.Controllers
         }
 
 
-       
+
+
+
+
+
         [HttpGet]
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return BadRequest();
 
-            var employee = _unitOfWork.EmployeeRepository.Get(id.Value);
+            var employee = await _unitOfWork.EmployeeRepository.Get(id.Value);
             if (employee == null) return NotFound();
 
-            ViewData["departments"] = _unitOfWork.DepartmentRepository.GetAll();
+            ViewData["departments"] =await _unitOfWork.DepartmentRepository.GetAll();
             return View(employee);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
+        public async Task< IActionResult> DeleteConfirmed(int id)
         {
-            var employee = _unitOfWork.EmployeeRepository.Get(id);
+            var employee = await _unitOfWork.EmployeeRepository.Get(id);
 
             if (employee == null)
                 return NotFound();

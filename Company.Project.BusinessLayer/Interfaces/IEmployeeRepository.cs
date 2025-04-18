@@ -9,6 +9,6 @@ namespace Company.Project.BusinessLayer.Interfaces
 {
     public interface IEmployeeRepository: IGenericRepository<Employee>
     {
-        List<Employee> GetByName(string name);
+        Task<List<Employee>> GetByName(string name);
     }
 }

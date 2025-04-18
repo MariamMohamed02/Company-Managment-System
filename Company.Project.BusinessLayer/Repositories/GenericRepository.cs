@@ -16,9 +16,9 @@ namespace Company.Project.BusinessLayer.Repositories
         public GenericRepository(CompanyDbContext context) {
             _context = context;
          }
-        public int Add(T model)
+        public async Task< int> Add(T model)
         {
-            _context.Set<T>().Add(model);
+           await _context.Set<T>().AddAsync(model);
             return _context.SaveChanges();
         }
 
@@ -31,23 +31,23 @@ namespace Company.Project.BusinessLayer.Repositories
 
 
 
-        public T? Get(int id)
+        public async Task<T?> Get(int id)
         {
             if (typeof(T) == typeof(Employee))
             {
-                return _context.Employees.Include(e => e.Department).FirstOrDefault(e=>e.Id==id)as T;
+                return await _context.Employees.Include(e => e.Department).FirstOrDefaultAsync(e=>e.Id==id)as T;
             }
             
-            return _context.Set<T>().Find(id);
+            return await _context.Set<T>().FindAsync(id);
         }
 
-        public IEnumerable<T> GetAll()
+        public async Task<IEnumerable<T>>GetAll()
         {
             // allow null values for department to be loaded
             if (typeof(T) == typeof(Employee)){
-                return (IEnumerable<T>) _context.Employees.Include(e=>e.Department).ToList();
-            }
-            return _context.Set<T>().ToList();  
+                return (IEnumerable<T>) await _context.Employees.Include(e => e.Department).ToListAsync();
+            } 
+            return await _context.Set<T>().ToListAsync();  
         }
 
         public int Update(T model)
