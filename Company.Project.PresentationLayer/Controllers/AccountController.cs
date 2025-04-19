@@ -103,7 +103,7 @@ namespace Company.Project.PresentationLayer.Controllers
 
 
         [HttpGet]
-        // new -> to override the SignOut funtion in the parent 
+        // new -> to hide the SignOut funtion in the parent 
         public new async Task< IActionResult> SignOut()
         {
             await _signInManager.SignOutAsync();
