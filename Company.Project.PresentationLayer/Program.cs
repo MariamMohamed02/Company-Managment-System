@@ -2,8 +2,11 @@ using Company.Project.BusinessLayer;
 using Company.Project.BusinessLayer.Interfaces;
 using Company.Project.BusinessLayer.Repositories;
 using Company.Project.DataLayer.Data.Contexts;
+using Company.Project.DataLayer.Models;
 using Company.Project.PresentationLayer.Mapping;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.General;
 
 namespace Company.Project.PresentationLayer
 {
@@ -18,11 +21,20 @@ namespace Company.Project.PresentationLayer
             builder.Services.AddScoped<IDepartmentRepository,DepartmentRepository>(); // allow dependency injection for the department repository
             builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>(); // allow dependency injection for the employee repository
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            
+
             builder.Services.AddDbContext<CompanyDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             }); // allow di for dbcontext
             builder.Services.AddAutoMapper(m => m.AddProfile(new EmployeeProfile()));
+            builder.Services.AddIdentity<AppUser,IdentityRole>()
+                .AddEntityFrameworkStores<CompanyDbContext>(); // allow DI for user,role and sign in managers
+
+            builder.Services.ConfigureApplicationCookie(
+                config => {config.LoginPath = "/Account/SignIn";
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -38,7 +50,8 @@ namespace Company.Project.PresentationLayer
 
             app.UseRouting();
 
-            //app.UseAuthorization();
+            app.UseAuthentication();  
+            app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
