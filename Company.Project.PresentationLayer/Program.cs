@@ -29,7 +29,8 @@ namespace Company.Project.PresentationLayer
             }); // allow di for dbcontext
             builder.Services.AddAutoMapper(m => m.AddProfile(new EmployeeProfile()));
             builder.Services.AddIdentity<AppUser,IdentityRole>()
-                .AddEntityFrameworkStores<CompanyDbContext>(); // allow DI for user,role and sign in managers
+                .AddEntityFrameworkStores<CompanyDbContext>()
+                .AddDefaultTokenProviders(); // allow DI for user,role and sign in managers
 
             builder.Services.ConfigureApplicationCookie(
                 config => {config.LoginPath = "/Account/SignIn";
