@@ -82,7 +82,7 @@ Structured as:
 | Role Management      | RoleManager, UserManager        |
 | Email Support        | SMTP (for password reset)       |
 | Mapping              | AutoMapper                      |
-| Frontend             | Razor Views                     |
+| Frontend             | Razor Views , Bootstrap                    |
 | Architecture         | 3-Tier                          |
 | Data Validation      | Data Annotations, Fluent API    |
                   
